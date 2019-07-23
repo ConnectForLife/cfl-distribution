@@ -8,7 +8,7 @@ image: mesosphere/aws-cli:1.14.5
 pipelines:
   default:
     - step:
-        name: Build & push cfl/openmrs Docker image
+        name: Build and push cfl/openmrs Docker image
         services:
           - docker
         script: # Modify the commands below to build your repository.
