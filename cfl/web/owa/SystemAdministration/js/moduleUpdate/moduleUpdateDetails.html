@@ -1,0 +1,165 @@
+<style type="text/css">
+    table {
+        width: 100%;
+    }
+
+    tr td {
+        word-wrap: break-word;
+    }
+
+    /*style="word-wrap:break-word"*/
+</style>
+
+
+<div class="container" data-ng-init="checkAllModulesForUpdate()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Module Updates</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleSuccess}}
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="stopModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{stopModuleSuccess}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="startModuleError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleError}}
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="unloadModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{unloadModuleSuccess}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="unloadModuleError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{unloadModuleError}}
+    </div>
+
+
+    <!--    Module Upgrade Notifications-->
+
+    <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startupsuccessMsg}}
+    </div>
+
+    <div ng-show="startuperrorMsg">
+        <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{uplodedsuccessMsg}}
+        </div>
+        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{startuperrorMsg}}
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{downloadErrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="checkUpdateForAllModuleError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{checkUpdateForAllModuleError}} <br/>
+        <div ng-if="updateErrorModules.length">
+            Failed Modules :
+            <p ng-repeat="errorModule in updateErrorModules">{{index}}. {{errorModule}} </p>
+        </div>
+
+    </div>
+
+    <div class="alert alert-info alert-dismissable" ng-if="UpdatesFound==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        No Updates found. All modules are upto date!
+    </div>
+
+    <!--    //Module update check Notifications-->
+
+    <div class="row col-12">
+        <div class="panel-body" ng-if="availableUpdateData.length>0">
+
+            <table class="layout display responsive-table">
+                <tbody>
+                <tr style="width:100%;">
+                    <th> Name</th>
+                    <th style="max-width: 80px;"> Author</th>
+                    <th> Description</th>
+                    <th style="max-width: 60px;"> Cu.Ver</th>
+                    <th style="min-width: 250px;"> Actions</th>
+                </tr>
+
+                <tr ng-repeat="updateData in availableUpdateData">
+                    <td valign="top">
+                        <a href="#/module-show/{{updateData.uuid}}">{{updateData.display}}</a>
+                    </td>
+                    <td valign="top">{{updateData.author}}</td>
+                    <td valign="top">{{updateData.description}}</td>
+                    <td valign="top">{{updateData.version}}</td>
+                    <td valign="top" style="width: 130px;">
+                        <button ng-click="updateModule(updateData.uuid, updateData.downloadurl)" style="width: 100%;text-align: center;"><i class="icon-repeat"> </i> Upgrade to {{updateData.newversion}}
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<style>
+    button {
+        postion: relative;
+        text-align: right;
+        vertical-align: middle;
+    }
+
+    button img {
+        position: relative;
+        padding-right: 7px;
+        vertical-align: middle;
+        display: inline-block;
+
+    }
+</style>
+
+
+<!--Loading Pop Up to prevent other actions while working on a action-->
+<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-3 text-center">
+                            <img src="img/inprogress.gif">
+                        </div>
+                        <div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg">
+                            <h1>Please wait while we complete the actions!</h1>
+                        </div>
+                    </div>
+
+                </div>
+                <!--<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>-->
+            </form>
+        </div>
+    </div>
+</div>
+<!--//Loading Pop Up to prevent other actions while working on a action-->

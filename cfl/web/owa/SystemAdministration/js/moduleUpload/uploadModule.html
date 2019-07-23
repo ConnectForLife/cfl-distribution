@@ -1,0 +1,197 @@
+<div class="container" id="moduleUploadContainer">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Add or Upgrade Module</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" id="invalidFileTypeError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Invalid Module found. Please upload the .omod file.
+    </div>
+
+    <div style="margin-bottom:15px;" ng-hide="uplodedsuccessMsg && startupsuccessMsg">
+        <div class="text-center center-block">
+            <b>Select Module to Upload </b>
+        </div>
+        <div class="panel-body center-block">
+
+            <!--Drag and Drop -->
+            <div class="demo-droppable center-block" for="test">
+                <input type="file" fileread="uploadme.src" ngf-select ng-model="myFile" file-model="myFile" name="file"
+                       file="file"
+                       accept=".omod" ngf-max-size="10MB" required accept=".omod" onChange="validate(this.value)"
+                       ngf-model-invalid="errorFile" id="module_upload" style="border: 0px;">
+                <h1 class="output center-block" id="dragAndDropOutput" style="margin-top: -150px;">Drag files here or
+                    click to upload</h1>
+            </div>
+            <!-- // Drag and Drop -->
+        </div>
+        <div class="text-center center-block">
+
+            <button id="uploadButton" ng-click="uploadFile()"><i class="icon-upload-alt"> </i> Upload Module</button>
+            <button id="removeButton" ng-click="myFile = null; removeFile();"><i class="icon-remove"> </i> Remove
+            </button>
+        </div>
+    </div>
+
+    <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
+
+    <div class="row col-12" ng-show="uplodedsuccessMsg">
+        <div class="panel-body">
+            <h2>Module Details : {{responseJsonData["org.openmrs.module.Module"].name}} </h2>
+
+            <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
+                <a class="close" data-dismiss="alert" aria-label="close">×</a>
+                {{startupsuccessMsg}}
+            </div>
+
+            <div ng-show="startuperrorMsg">
+                <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
+                    <a class="close" data-dismiss="alert" aria-label="close">×</a>
+                    {{uplodedsuccessMsg}}
+                </div>
+                <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
+                    <a class="close" data-dismiss="alert" aria-label="close">×</a>
+                    <b>{{startuperrorMsg}}</b>
+
+                    <div class="alert" ng-show="startuperrorMsg" style="margin-bottom: 10px;">
+                        {{responseJsonData["org.openmrs.module.Module"].startupErrorMessage}}
+                    </div>
+
+                </div>
+            </div>
+
+            <table class="">
+                <tbody>
+                <tr>
+                    <td> Module Name</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].name}}</td>
+                </tr>
+                <tr>
+                    <td> Module ID</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].moduleId}}</td>
+                </tr>
+                <tr>
+                    <td> Status</td>
+                    <td ng-if="startupsuccessMsg">
+                        Running
+                    </td>
+                    <td ng-if="startuperrorMsg">
+                        Stopped
+                    </td>
+                </tr>
+
+                <tr>
+                    <td> Description</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].description}}</td>
+                </tr>
+                <tr>
+                    <td> Author</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].author}}</td>
+                </tr>
+                <tr>
+                    <td> Version</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].version}}</td>
+                </tr>
+
+                <tr>
+                    <td> Module Uploaded Path</td>
+                    <td> {{responseJsonData["org.openmrs.module.Module"].file}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="text-center center-block">
+            <a href='#/module-show/{{responseJsonData["org.openmrs.module.Module"].moduleId}}'>
+                <button class="center-block">More module's details</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+    input[type="file"] {
+        opacity: 0;
+        width: 95%;
+        height: 95%;
+        max-width: 95%;
+    }
+
+    .demo-droppable {
+        background-color: #EEEEEE;
+        /*padding: 100px 0;*/
+        width: 100%;
+        height: 300px;
+        text-align: center;
+        outline: 3px dashed #BBBBBB;
+        outline-offset: -10px;
+        font-weight: bold;
+        color: #000000;
+        cursor: pointer;
+    }
+
+    .demo-droppable.dragover {
+        background: #00CC71;
+        outline: 3px dashed #FFF;
+    }
+
+
+</style>
+
+
+<script type="text/javascript">
+    $('#invalidFileTypeError').hide();
+    $('#uploadButton').prop('disabled', true);
+    $('#removeButton').hide();
+
+    function validate(file) {
+        $('#invalidFileTypeError').hide();
+        $('#uploadButton').prop('disabled', true);
+        $('#removeButton').hide();
+
+        var ext = file.split(".");
+        ext = ext[ext.length - 1].toLowerCase();
+        var arrayExtensions = ["omod"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            $('#invalidFileTypeError').show();
+            $("#module_upload").val("");
+        }
+    }
+
+    $('input[type=file]').on('change', function () {
+        if ($(this)[0].files[0].name != "") {
+            $("#dragAndDropOutput").text($(this)[0].files[0].name);
+            $('#uploadButton').prop('disabled', false);
+            $('#removeButton').show();
+        }
+    });
+
+    $('input[type=file]').on('dragenter', function () {
+        $('div').addClass('dragover');
+    });
+
+    $('input[type=file]').on('dragover', function () {
+        $('div').addClass('dragover');
+    });
+
+    $('input[type=file]').on('dragleave', function () {
+        $('div').removeClass('dragover');
+    });
+
+    $('input[type=file]').on('drop', function () {
+        $('div').removeClass('dragover');
+    });
+
+</script>
+
+

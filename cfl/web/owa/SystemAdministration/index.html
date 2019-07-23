@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app="managemodule">
+  <head>
+    <title>System Administration</title>
+    <!-- openmrs favicon -->
+    <link rel="shortcut icon" type="image/ico" href="../../images/openmrs-favicon.ico"/>
+    <link rel="icon" type="image/png" href="../../images/openmrs-favicon.png"/>
+    <!-- bower:css -->
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    <!-- endbower -->
+    <!-- owa styles -->
+    <link rel="stylesheet" href="css/moduleManagement.css" type="text/css"/>
+    <link rel="stylesheet" href="../../ms/uiframework/resource/referenceapplication/styles/referenceapplication.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap-modified.css" type="text/css"/>
+    <link href="css/datetimepicker.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <!-- OpenMRS Header-->
+          <header ng-controller="mainHomeCtrl">
+        <div class="logo">
+            <a href="../../referenceapplication/home.page">
+                <img src="../../ms/uiframework/resource/uicommons/images/logo/openmrs-with-title-small.png">
+            </a>
+        </div>
+        <ul class="user-options" data-ng-init="getOpenMRSSession()">
+            <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px; padding:0px;">
+                <a href="" class="dropdown-toggle" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-user small"></i>
+                    <span id="selected-location" data-bind="text: text" location-uuid="{{OpenMRSSessionData.sessionLocation.uuid}}" ng-bind="OpenMRSSessionData.user.display">
+                     </span>
+                    <i class="icon-caret-down link" style="font-size: 0.7em;"></i>
+                </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                    <a href="../../adminui/myaccount/myAccount.page">
+                <button class="dropdown-item dropdown-item-OpenMRSheader" type="button" >My Account</button>
+                  </a>  
+              </div>  
+            </li>
+            <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px; padding:0px;">
+                <a href="" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-map-marker small"></i>
+                    <span id="selected-location" data-bind="text: text" location-uuid="{{OpenMRSSessionData.sessionLocation.uuid}}" ng-bind="OpenMRSSessionData.sessionLocation.display">
+                     </span>
+                    <i class="icon-caret-down link" style="font-size: 0.7em;"></i>
+                </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2" data-ng-init="getOpenMRSLocation()">
+                <button  ng-repeat="location in OpenMRSLocationData" class="dropdown-item dropdown-item-OpenMRSheader" type="button" ng-click="setOpenMRSLocation(location.uuid,location.display)">{{location.display}}</button>
+
+              </div>  
+            </li>
+            <li class="logout" >
+                <a href="../../appui/header/logout.action?successUrl={{getLogoutSuccessPath()}}">
+                    Logout
+                    <i class="icon-signout small"></i>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <!--// OpenMRS Header-->
+
+      
+    <!--OpenMRS breadcrumbs-->
+    <ul id="breadcrumbs" ng-controller="breadCrumbCtrl" >
+        <li>
+            <a href="../../">
+            <i class="icon-home small"></i>
+            </a> 
+        </li>
+        <li ng-repeat="links in openMRSBreadcrumbs" ng-show="links">
+            <i class="icon-chevron-right link"></i>
+            <a href="{{links[1]}}" ng-if="links[1]!=''" ng-bind="links[0]"></a>
+            <b ng-if="links[1]==''" ng-bind="links[0]"></b>
+        </li>
+    </ul>
+    <!--//OpenMRS breadcrumbs-->
+
+      
+      
+    <div id="body-wrapper" ng-view></div>
+
+
+    <!-- Required lib scripts -->
+
+    <!-- bower:js -->
+    <script src="lib/jquery/dist/jquery.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="lib/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-mocks/angular-mocks.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="lib/angular-resource/angular-resource.js"></script>
+    <script src="lib/ng-file-upload/ng-file-upload.js"></script>
+    <script src="lib/angular-upload/angular-upload.js"></script>
+    <script src="lib/x2js/xml2json.min.js"></script>
+    <script src="lib/angular-xml/angular-xml.js"></script>
+    <!-- endbower -->
+    <!-- owa scripts -->
+    <script src="js/moduleManagerStartUp.js"></script>
+    <script src="js/route/openMRSRoute.js" ></script>
+    <script src="js/route/routeManager.js"></script>
+      
+     <!-- Main Scripts --> 
+    <script src="js/main/mainController.js"></script>
+    <script src="js/main/mainService.js"></script>
+    <script src="js/common/logger.js"></script>
+    <script src="js/common/common.js"></script>
+    <script src="js/common/angularCopyToClipboard.js"></script>
+   <!-- Module management Scripts -->
+    <script src="js/moduleView/moduleViewControllers.js"></script>
+    <script src="js/moduleView/moduleViewServices.js"></script> 
+    <script src="js/moduleUpload/uploadModulesController.js"></script> 
+    <script src="js/moduleSearch/searchModulesController.js"></script>
+    <script src="js/moduleSearch/searchModuleService.js"></script>
+    <script src="js/moduleUpdate/moduleUpdateService.js"></script>   
+      
+   <!-- System Info scripts -->   
+    <script src="js/systeminfo/systemInfoController.js"></script>
+    <script src="js/systeminfo/systemInfoService.js"></script>
+
+    <script src="js/taskView/taskViewController.js"></script>
+    <script src="js/taskView/taskViewService.js"></script>
+    <script src="js/taskManage/addNewTaskController.js"></script>
+
+    <script src="js/serverLog/serverLogController.js"></script>
+    <script src="js/serverLog/serverLogService.js"></script>
+
+    <!-- Required lib scripts -->
+    <script src="js/lib/angular-base64.js"></script> 
+      
+  </body>
+</html>

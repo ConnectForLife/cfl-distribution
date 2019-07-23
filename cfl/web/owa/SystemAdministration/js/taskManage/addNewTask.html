@@ -1,0 +1,188 @@
+
+<div class="container" data-ng-init="initializeAddNewTask()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h1>{{formProperties[1]}}</h1>
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="isValidationError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{validationErrorMessage}}
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-if="isValidationError==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Task definition saved successfully.
+    </div>
+
+    <div class="panel-body" style="font-size: 18px;">
+        <h2> Task Configuration </h2>
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Name *</div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <input type="text" placeholder="Enter task name" ng-model="taskName" style="width:95%; font-size: 18px;" required>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Schedulable Class *</div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <!--<input type="text" placeholder="Enter Schedulable Class" ng-model="schedulableClass" style="width:95%;" required>-->
+                <select class="form-control" ng-model="schedulableClass" style="min-width: 95%; font-size: 18px;">
+                    <option value="org.openmrs.scheduler.tasks.AutoCloseVisitsTask">org.openmrs.scheduler.tasks.AutoCloseVisitsTask</option>
+                    <option value="org.openmrs.scheduler.tasks.ProcessHL7InQueueTask">org.openmrs.scheduler.tasks.ProcessHL7InQueueTask</option>
+                    <option value="org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask">org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask</option>
+                    <option value="org.openmrs.scheduler.tasks.AlertReminderTask">org.openmrs.scheduler.tasks.AlertReminderTask</option>
+                    <option value="org.openmrs.scheduler.tasks.CheckInternetConnectivityTask ">org.openmrs.scheduler.tasks.CheckInternetConnectivityTask</option>
+                    <option value="org.openmrs.scheduler.tasks.SendEmailTask">org.openmrs.scheduler.tasks.SendEmailTask</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Description</div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <textarea ng-model="description" style="width:95%; font-size: 18px;" required> </textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body" style="font-size: 18px;">
+        <h2> Schedule </h2>
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-11 col-xl-11 col-sm-11">PLEASE NOTE: Changes to the schedule below are NOT passed onto task instances that are already running. After saving your changes, you MUST stop/start the desired task on the Task List page in order to pass these schedule changes onto that task. </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Started </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <p ng-if="started == true">
+                    <img src="img/running-module.png"  height="20" style="top: 5px;left: auto; padding-right: 15px;" /> Started
+                </p>
+               <p ng-if="started != true">
+                   <img src="img/stopped-module.png"  height="20" style="top: 5px;left: auto; padding-right: 15px;"/> Not Started
+               </p>
+
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Start on Startup</div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <input type="checkbox" id="startOnStartup" ng-model="startOnStartup" value="true">
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Start time</div>
+            <div class="col-7 col-xl-7 col-sm-7 form">
+
+                <div class="input-append date" id="component-date-time-picker" data-original-title="" title="">
+                    <input class="input-large" ng-model="startTimeVal" size="16" type="text" style="display : inline-block; font-size: 18px;">
+                    <span class="add-on" style="display : inline-block; margin-top: 4px;"><i class="icon-th"></i></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Repeat interval</div>
+            <div class="col-3 col-xl-3 col-sm-3 form">
+                <input type="number" placeholder="Enter repeat interval" ng-model="repeatInterval"  style="width:95%; font-size: 18px;" required>
+            </div>
+            <div class="col-3 col-xl-3 col-sm-3 form">
+                <select class="form-control"  ng-model="repeatIntervalType" style="min-width: 100%; font-size: 18px;">
+                    <option value="seconds">Seconds</option>
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body" style="font-size: 18px;">
+        <h2> Properties </h2>
+        <div class="bd-callout bd-callout-info" ng-repeat="properties in taskProperties">
+            <h4 id="" style="margin-bottom:10px;">New Property</h4>
+            <div class="row" style="margin-bottom:10px;">
+                <table>
+                    <tr style="border: 0px">
+                        <td style="border: 0px;">
+                            <div style="padding-left: 5px;">Name</div>
+                            <div style="padding-top: 5px; padding-left: 5px;">
+                            <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%; font-size: 18px;" required>
+                            </div>
+                        </td>
+                        <td style="border: 0px;">
+                            <div style="padding-left: 5px;">Value</div>
+                            <div style="padding-top: 5px; padding-left: 5px;">
+                            <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%; font-size: 18px;" required>
+                            </div>
+                        </td>
+                        <td style="border: 0px; padding-top: 28px;">
+                            <button class="btn btn-danger" ng-click="removeTaskProperties()"><i class="icon-remove"> </i></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <button ng-click="addNewTaskProperties()"><i class="icon-plus"> </i> Add New</button>
+
+    </div>
+
+    <div class="row" >
+        <div class="modal-footer" style="width: 100%;">
+            <button type="button" class="btn btn-secondary" ng-click="saveTaskDefinitions()"><i class="icon-save"> </i> {{formProperties[0]}}</button>
+           <a href="#/task-view">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+           </a>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    // MM/dd/yyyy HH:mm:ss
+    $(function () {
+        $('#component-date-time-picker').datetimepicker({
+            format: 'yyyy-mm-dd HH:mm:ss.sss'
+        });
+    });
+
+    var renderedTime = 0;
+    function renderDatetimePickers()
+    {
+        if(renderedTime > 0)
+        {
+            $("#component-date-time-picker").datetimepicker("remove");
+        }
+        var enableMouseWheelViewNavigation = $('#mouse-wheel-enable').is(":checked"),
+            mouseWheelViewNavigationDelay = $("#mouse-wheel-speed-control").val() || 100,
+            inverseDirection = $('#mouse-wheel-inverse-direction').is(":checked"),
+            options = {
+                viewSelect: 4,
+                wheelViewModeNavigation: enableMouseWheelViewNavigation,
+                wheelViewModeNavigationDelay: mouseWheelViewNavigationDelay,
+                wheelViewModeNavigationInverseDirection: inverseDirection
+
+            };
+        $("#component-date-time-picker").datetimepicker(options);
+        if(enableMouseWheelViewNavigation)
+        {
+            $("#component-date-time-picker").tooltip({
+                html:true,
+                title:"Please scroll your mouse wheel on the date time picker to see the changes."
+            });
+        }else
+        {
+            $("#component-date-time-picker").tooltip("destroy");
+        }
+        renderedTime++;
+    }
+    //renderDatetimePickers();
+</script>

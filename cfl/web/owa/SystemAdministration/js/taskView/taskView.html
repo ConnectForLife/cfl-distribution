@@ -1,0 +1,120 @@
+
+<div class="container" data-ng-init="getAllTaskDetails()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Manage Scheduler</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-if="isActionStatus[0]==true">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{isActionStatus[1]}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="isActionStatus[0]==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{isActionStatus[1]}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="requestAllTaskDetails==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Could not get the task information from the system.
+    </div>
+
+
+    <div class="row col-12">
+        <div class="panel-body" style="width: 100%" ng-show="allTasksData">
+
+            <div style="padding-bottom: 10px;">
+                <a href="#/add-new-task">
+                    <button><i class="icon-plus"> </i> Add Tasks</button>
+                </a>
+                <a> <button ng-click="getAllTaskDetails()"><i class="icon-repeat"> </i> Refresh</button> </a>
+                <a style="float: right;"> <button ng-click="rescheduleAllTasks()"><i class="icon-repeat"> </i> Reschedule All</button> </a>
+                <!--<a> <button ng-click="shutdownAllTasks()"><i class="icon-repeat"> </i> Shutdown All</button> </a>-->
+                <!--<a> <button ng-click="startOnStartupTasks()"><i class="icon-repeat"> </i>Start Startup Tasks</button> </a>-->
+
+            </div>
+
+
+            <table class="layout display responsive-table">
+                <tbody>
+                <tr>
+                    <th style="min-width: 40px;">Status</th>
+                    <th> Task </th>
+                    <th style="min-width: 350px;"> Schedule </th>
+                    <th> On Startup </th>
+                    <th  style="min-width: 160px;"> Actions </th>
+                </tr>
+
+                <tr ng-repeat="task in allTasksData">
+                    <td valign="top" style="max-width: 30px; vertical-align: middle; text-align:center;">
+                        <img src="img/running-module.png" ng-if="task.started == true" height="20" style="top: 5px;left: auto;" />
+                        <img src="img/stopped-module.png" ng-if="task.started != true" height="20" style="top: 5px;left: auto;"/>
+                    </td>
+                    <td valign="top" style="vertical-align: middle;">
+                        <a href="#/task-view/{{task.name}}">{{task.name}}</a>
+                    </td>
+                    <td valign="top">
+                        <ul class="list-group" style="margin-top: 10px;">
+                            <li class="list-group-item"> Runs every : <b>{{task.repeatInterval}} s</b></li>
+                            <li class="list-group-item"> Last Execution : <b>{{task.lastExecutionTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                            <li class="list-group-item"> Started : <b>{{task.startTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                        </ul>
+                    </td>
+
+                    <td valign="top" ng-if="task.startOnStartup==true" style="vertical-align: middle;"><b>Yes</b>(automatic)</td>
+                    <td valign="top" ng-if="task.startOnStartup==false" style="vertical-align: middle;"><b>No</b>(manual)</td>
+
+                    <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
+                        <a></a><button ng-click="stopConfirmationShow(task.uuid, task.name)" style="width:160px;" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> Stop</button> </a>
+                        <a><button ng-click="startTask(task.uuid, task.name)" style="width:160px;" ng-if="task.started != true"> <img src="img/start-new-1.png" /> Start</button> </a>
+                        <br/>
+                        <a><button style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"> <i class="icon-repeat"></i> Reschedule</button> </a>
+                        <br/>
+                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="unloadConfirmationShow(task.uuid, task.name )"> <i class="icon-trash"></i> Delete</button> </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="modal fade" id="deleteConfirmation" aria-labelledby="deleteConfirmation" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete {{unloadConfirmModuleData.name}}?</h5>
+            </div>
+            <form>
+                <div class="modal-footer" >
+                    <button class="btn btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="stopConfirmation" aria-labelledby="stopConfirmation" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.name}}?</h5>
+            </div>
+            <form>
+                <div class="modal-footer" >
+                    <button class="btn btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-include src="'js/common/loadingPopUp.html'"></ng-include>
