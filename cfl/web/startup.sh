@@ -17,7 +17,7 @@ create_tables=${DB_CREATE_TABLES}
 auto_update_database=${DB_AUTO_UPDATE}
 EOF
 
-echo "------  Starting distribution -----"
+echo "------  Starting CFL distribution -----"
 cat /root/openmrs-distro.properties
 echo "-----------------------------------"
 
