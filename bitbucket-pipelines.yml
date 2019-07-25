@@ -14,8 +14,10 @@ pipelines:
         script: # Modify the commands below to build your repository.
           # aws login
           - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
-          # docker
+          # docker - build and push to ECR
           - docker build -t cfl/openmrs cfl/web
           - docker tag cfl/openmrs:latest ${AWS_REGISTRY_URL}/cfl/openmrs:latest
           - docker push ${AWS_REGISTRY_URL}/cfl/openmrs:latest
+          # redeploy ECS - it uses the latest image from ECR
+          - aws ecs update-service --cluster cfl-openmrs-cluster --service cfl-openmrs-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
 
