@@ -92,7 +92,7 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:186176112600:task-definition/cfl-openmrs:7",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:186176112600:task-definition/cfl-openmrs:9",
   "family": "cfl-openmrs",
   "requiresAttributes": [
     {
@@ -150,7 +150,7 @@
   ],
   "networkMode": "awsvpc",
   "cpu": "512",
-  "revision": 7,
+  "revision": 9,
   "status": "ACTIVE",
   "proxyConfiguration": null,
   "volumes": []
