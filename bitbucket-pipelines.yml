@@ -1,17 +1,15 @@
-# This is a sample build configuration for Docker.
-# Check our guides at https://confluence.atlassian.com/x/O1toN for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
 image: mesosphere/aws-cli:1.14.5
 
 pipelines:
-  default:
-    - step:
+  branches:
+    master:
+      # Each commit to the master branches pushes the image to the ECR repository
+      # and updates the ECS deployment.
+      - step:
         name: Build and push cfl/openmrs Docker image
         services:
           - docker
-        script: # Modify the commands below to build your repository.
+        script:
           # aws login
           - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
           # docker - build and push to ECR
