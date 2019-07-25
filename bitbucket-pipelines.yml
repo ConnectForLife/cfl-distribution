@@ -6,16 +6,16 @@ pipelines:
       # Each commit to the master branches pushes the image to the ECR repository
       # and updates the ECS deployment.
       - step:
-        name: Build and push cfl/openmrs Docker image
-        services:
-          - docker
-        script:
-          # aws login
-          - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
-          # docker - build and push to ECR
-          - docker build -t cfl/openmrs cfl/web
-          - docker tag cfl/openmrs:latest ${AWS_REGISTRY_URL}/cfl/openmrs:latest
-          - docker push ${AWS_REGISTRY_URL}/cfl/openmrs:latest
-          # redeploy ECS - it uses the latest image from ECR
-          - aws ecs update-service --cluster cfl-openmrs-cluster --service cfl-openmrs-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
+          name: Build and push cfl/openmrs Docker image
+          services:
+            - docker
+          script:
+            # aws login
+            - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+            # docker - build and push to ECR
+            - docker build -t cfl/openmrs cfl/web
+            - docker tag cfl/openmrs:latest ${AWS_REGISTRY_URL}/cfl/openmrs:latest
+            - docker push ${AWS_REGISTRY_URL}/cfl/openmrs:latest
+            # redeploy ECS - it uses the latest image from ECR
+            - aws ecs update-service --cluster cfl-openmrs-cluster --service cfl-openmrs-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
 
