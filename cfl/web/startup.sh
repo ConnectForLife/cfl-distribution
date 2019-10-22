@@ -5,6 +5,18 @@ DB_AUTO_UPDATE=${DB_AUTO_UPDATE:-false}
 MODULE_WEB_ADMIN=${MODULE_WEB_ADMIN:-true}
 DEBUG=${DEBUG:-false}
 
+OPENMRS_HOME=/usr/local/tomcat/.OpenMRS
+
+# Move OWA and modules to OpenMRS home
+
+mkdir -p $OPENMRS_HOME/owa
+mkdir -p $OPENMRS_HOME/modules
+
+mv /opt/openmrs-modules/* $OPENMRS_HOME/modules/
+mv /opt/openmrs-owa/* $OPENMRS_HOME/owa/
+
+rm -r /opt/openmrs-*
+
 cat > /usr/local/tomcat/openmrs-server.properties << EOF
 install_method=auto
 connection.url=jdbc\:mysql\://${DB_HOST}\:3306/${DB_DATABASE}?autoReconnect\=true&sessionVariables\=default_storage_engine\=InnoDB&useUnicode\=true&characterEncoding\=UTF-8

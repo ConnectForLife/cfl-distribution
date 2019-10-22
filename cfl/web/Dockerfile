@@ -5,8 +5,9 @@ FROM tomcat:7-jre8
 VOLUME /usr/local/tomcat/.OpenMRS
 
 COPY openmrs.war  /usr/local/tomcat/webapps/openmrs.war
-COPY modules /usr/local/tomcat/.OpenMRS/modules
-COPY owa /usr/local/tomcat/.OpenMRS/owa
+
+COPY modules /opt/openmrs-modules
+COPY owa /opt/openmrs-owa
 
 COPY setenv.sh /usr/local/tomcat/bin/setenv.sh
 

@@ -28,8 +28,6 @@ services:
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
     volumes:
       - web-data:/usr/local/tomcat/.OpenMRS
-      - ./web/modules:/usr/local/tomcat/.OpenMRS/modules/
-      - ./web/owa:/usr/local/tomcat/.OpenMRS/owa/
 
 volumes:
   db-data:
