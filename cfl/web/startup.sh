@@ -46,7 +46,9 @@ fi
 
 # trigger first filter to start data importation
 sleep 15
+echo "Triggerring data import"
 curl -L http://localhost:8080/openmrs/ > /dev/null
+echo "Data import triggered"
 sleep 15
 
 # bring tomcat process to foreground again
