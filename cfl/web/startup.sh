@@ -12,8 +12,8 @@ OPENMRS_HOME=/usr/local/tomcat/.OpenMRS
 mkdir -p $OPENMRS_HOME/owa
 mkdir -p $OPENMRS_HOME/modules
 
-mv /opt/openmrs-modules/* $OPENMRS_HOME/modules/
-mv /opt/openmrs-owa/* $OPENMRS_HOME/owa/
+cp -r /opt/openmrs-modules/* $OPENMRS_HOME/modules/
+cp -r /opt/openmrs-owa/* $OPENMRS_HOME/owa/
 
 rm -r /opt/openmrs-*
 
