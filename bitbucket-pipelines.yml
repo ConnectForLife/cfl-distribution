@@ -18,5 +18,5 @@ pipelines:
             - docker push ${AWS_REGISTRY_URL}/cfl/openmrs:latest
             # redeploy ECS - it uses the latest image from ECR
             - aws ecs update-service --cluster cfl-openmrs-cluster --service cfl-openmrs-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
-            - aws ecs update-service --cluster cfl-openmrs-cluster --service cfl-dev-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
+            - aws ecs update-service --cluster cfl-ec2-cluster --service cfl-dev-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
 
