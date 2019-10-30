@@ -12,10 +12,16 @@ OPENMRS_HOME=/usr/local/tomcat/.OpenMRS
 mkdir -p $OPENMRS_HOME/owa
 mkdir -p $OPENMRS_HOME/modules
 
+echo 'Copying OpenMRS modules'
 cp -r /opt/openmrs-modules/* $OPENMRS_HOME/modules/
+
+echo 'Copying OpenMRS OWA apps'
 cp -r /opt/openmrs-owa/* $OPENMRS_HOME/owa/
 
-rm -r /opt/openmrs-*
+if [ "$COPY_CFL_MODULES" != "false" ]; then
+    echo 'Copying CFL modules'
+    cp -r /opt/cfl-modules/* $OPENMRS_HOME/modules/
+fi
 
 cat > /usr/local/tomcat/openmrs-server.properties << EOF
 install_method=auto
@@ -53,3 +59,4 @@ sleep 15
 
 # bring tomcat process to foreground again
 wait ${!}
+
