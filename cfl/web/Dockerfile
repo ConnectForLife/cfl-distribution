@@ -8,6 +8,7 @@ COPY openmrs.war  /usr/local/tomcat/webapps/openmrs.war
 
 COPY modules /opt/openmrs-modules
 COPY owa /opt/openmrs-owa
+COPY cfl-modules /opt/cfl-modules
 
 COPY setenv.sh /usr/local/tomcat/bin/setenv.sh
 
