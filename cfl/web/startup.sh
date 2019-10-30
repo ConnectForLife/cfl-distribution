@@ -23,8 +23,6 @@ if [ "$COPY_CFL_MODULES" != "false" ]; then
     cp -r /opt/cfl-modules/* $OPENMRS_HOME/modules/
 fi
 
-rm -r /opt/openmrs-*
-
 cat > /usr/local/tomcat/openmrs-server.properties << EOF
 install_method=auto
 connection.url=jdbc\:mysql\://${DB_HOST}\:3306/${DB_DATABASE}?autoReconnect\=true&sessionVariables\=default_storage_engine\=InnoDB&useUnicode\=true&characterEncoding\=UTF-8
