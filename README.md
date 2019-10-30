@@ -31,7 +31,7 @@ In order to force such an update, run:
 docker-compose -f docker-compose.yml -f docker-compose.module-reload.yml up -d --build
 ```
 
-This will overwrite the modules in your volumes with the modules from the repository..
+This will overwrite the modules in your volumes with the modules from the repository.
 
 ### Production
 To start containers in production mode you need to go to `cfl` directory and execute following (the docker-compose is required):
