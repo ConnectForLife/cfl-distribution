@@ -5,8 +5,33 @@ OpenMRS CFL distribution
 ## How to run the environment
 In order to run environment you need to go to `cfl` directory and execute following (the docker-compose is required):
 ```
-docker-compose up -d
+docker-compose up -d --build
 ```
+
+## Volumes
+
+After starting the development server two volumes are created.
+
+Volume for modules:
+
+```
+~/.cfl-dev/modules
+```
+
+Volume for OWA:
+```
+~/.cfl-dev/owa
+```
+
+CFL modules such as SMS, ETL or CallFlows are not overwritten by the container on restarts, since we use hot reloading. In other words, modules from this repository will not overwrite the modules in your volume during development.
+
+In order to force such an update, run:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.module-reload.yml up -d --build
+```
+
+This will overwrite the modules in your volumes with the modules from the repository..
 
 ### Production
 To start containers in production mode you need to go to `cfl` directory and execute following (the docker-compose is required):
