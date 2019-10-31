@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "dafec9b1-ee87-4fd2-a0d3-ad8555a425b3",
+		"_postman_id": "d8e11942-29b2-438b-ac04-55e5b719bb02",
 		"name": "CFL OpenMRS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -32,9 +32,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/configs",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/configs",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -83,9 +83,9 @@
 									"raw": "{\n   \"databases\":[\n      {\n         \"name\":\"openmrs database source\",\n         \"type\":\"MYSQL\",\n         \"url\":\"jdbc:mysql://172.28.0.2:3306/openmrs\",\n         \"user\":\"root\",\n         \"dbPassword\":\"Admin123\",\n         \"query\":\"SELECT * from openmrs.person p LEFT JOIN person_name pn ON p.person_id = pn.person_id;\"\n      }\n   ],\n   \"services\":\"userSer:userService\"\n}\n"
 								},
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/configs",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/configs",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -118,9 +118,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/configs/openmrs database source/test",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/configs/openmrs database source/test",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -145,9 +145,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/configs",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/configs",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -210,9 +210,9 @@
 									"raw": "{\n   \"source\":\"openmrs database source\",\n   \"loadTemplate\":\"#if ($outs.size() > 0)\\n    #foreach ($out in $outs)\\n        #set($user = $userSer.getUser($out.id))\\n        #set($propValue = \\\"${out.name} (${out.gender}) ${out.dob}\\\") \\n    \\t\\t$userSer.setUserProperty($user, \\\"ETL_TEST\\\", $propValue)\\n    #end\\n#end\",\n   \"transformTemplate\":\"#set ($genders = {})\\n$genders.put(\\\"M\\\", \\\"MALE\\\")\\n$genders.put(\\\"F\\\", \\\"FEMALE\\\")\\n\\n#foreach ($row in $rows)\\n    #set($out = {})\\n    $out.put(\\\"id\\\", $row.person_id)\\n    $out.put(\\\"name\\\", \\\"${row.given_name} ${row.family_name}\\\")\\n    $out.put(\\\"gender\\\", $genders.get($row.gender))\\n    $out.put(\\\"dob\\\", $util.formatDate($row.birthdate,\\\"dd-MM-yyyy\\\"))\\n    $out.put(\\\"creator\\\", $row.creator)\\n    $outs.add($out)\\n#end\",\n   \"name\":\"test mapping18\",\n   \"cronExpression\":\"0 * * 29 AUG ? *\",\n   \"query\":\"SELECT * from openmrs.person p LEFT JOIN person_name pn ON p.person_id = pn.person_id;\",\n   \"fetchSize\":100,\n   \"testResultsSize\":100\n}"
 								},
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/mappings",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/mappings",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -246,9 +246,9 @@
 									"raw": "{\n   \"source\":\"openmrs database source\",\n   \"loadTemplate\":\"#if ($outs.size() > 0)\\n    #foreach ($out in $outs)\\n        #set($user = $userSer.getUser($out.id))\\n        #set($propValue = \\\"${out.name} (${out.gender}) ${out.dob}\\\") \\n    \\t\\t$userSer.setUserProperty($user, \\\"ETL_TEST\\\", $propValue)\\n    #end\\n#end\",\n   \"transformTemplate\":\"#set ($genders = {})\\n$genders.put(\\\"M\\\", \\\"MALE\\\")\\n$genders.put(\\\"F\\\", \\\"FEMALE\\\")\\n\\n#foreach ($row in $rows)\\n    #set($out = {})\\n    $out.put(\\\"id\\\", $row.person_id)\\n    $out.put(\\\"name\\\", \\\"${row.given_name} ${row.family_name}\\\")\\n    $out.put(\\\"gender\\\", $genders.get($row.gender))\\n    $out.put(\\\"dob\\\", $util.formatDate($row.birthdate,\\\"dd-MM-yyyy\\\"))\\n    $out.put(\\\"creator\\\", $row.creator)\\n    $outs.add($out)\\n#end\",\n   \"name\":\"test mapping18\",\n   \"cronExpression\":\"0 * * 29 AUG ? *\",\n   \"query\":\"SELECT * from openmrs.person p LEFT JOIN person_name pn ON p.person_id = pn.person_id;\",\n   \"fetchSize\":100,\n   \"testResultsSize\":100\n}"
 								},
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/mappings",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/mappings",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -282,9 +282,9 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/mappings/18",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/mappings/18",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -309,9 +309,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/mappings",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/mappings",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -336,9 +336,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{localAddress}}/openmrs/ws/etllite/mappings/11/test",
+									"raw": "{{serverAddress}}/openmrs/ws/etllite/mappings/11/test",
 									"host": [
-										"{{localAddress}}"
+										"{{serverAddress}}"
 									],
 									"path": [
 										"openmrs",
@@ -391,9 +391,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/configs",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/configs",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -411,9 +411,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/renderers",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/renderers",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -431,9 +431,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/status/1",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/status/1",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -452,9 +452,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/flows",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/flows",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -472,9 +472,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/in/{conf}/flows/{flowName}.{extension}",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/in/{conf}/flows/{flowName}.{extension}",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -495,9 +495,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/out/{configName}/flows/{name}.{extension}",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/out/{configName}/flows/{name}.{extension}",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -518,9 +518,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/calls/{callId}.{extension}",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/calls/{callId}.{extension}",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -539,9 +539,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/callflows/calls/export-details",
+							"raw": "{{serverAddress}}/openmrs/ws/callflows/calls/export-details",
 							"host": [
-								"{{localAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -580,7 +580,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "SMS remote",
+			"name": "sms",
 			"item": [
 				{
 					"name": "get all configs",
@@ -588,9 +588,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/configs",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/configs",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -615,9 +615,9 @@
 							"file": {}
 						},
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/templates",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/templates",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -639,15 +639,15 @@
 							"formdata": [
 								{
 									"key": "file",
-									"value": "",
-									"type": "file"
+									"type": "file",
+									"src": "/home/user/cfl/custom_sms_template.json"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/templates/import",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/templates/import",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -666,9 +666,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/rest/v1/sms/loggingrecord",
+							"raw": "{{serverAddress}}/openmrs/ws/rest/v1/sms/loggingrecord",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -701,12 +701,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"recipients\": [\"test_recipient\"],\n\t\"message\": \"test message\",\n\t\"config\": \"test-config\",\n\t\"deliveryTime\": null,\n\t\"providerId\": \"Twilio\",\n\t\"failureCount\": 0,\n\t\"customParams\": null\n}"
+							"raw": "{\n\t\"recipients\": [\"48510636669\"],\n\t\"message\": \"test message2\",\n\t\"config\": \"nexmo\",\n\t\"deliveryTime\": null,\n\t\"providerId\": \"nexmo\",\n\t\"failureCount\": 0,\n\t\"customParams\": null\n}"
 						},
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/send",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/send",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -732,12 +732,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"defaultConfigName\": \"test-config\",\n  \"configs\": [\n    {\n      \"name\": \"test-config\",\n      \"maxRetries\": 3,\n      \"excludeLastFooter\": false,\n      \"splitHeader\": true,\n      \"splitFooter\": true,\n      \"templateName\": \"Twilio\",\n      \"props\": []\n    }\n  ]\n}\n"
+							"raw": "{\n    \"defaultConfigName\": \"nexmo\",\n    \"configs\": [\n        {\n            \"name\": \"IMI_Mobile\",\n            \"maxRetries\": 3,\n            \"excludeLastFooter\": false,\n            \"splitHeader\": \"true\",\n            \"splitFooter\": \"true\",\n            \"templateName\": \"IMI_Mobile\",\n            \"props\": [\n                {\n                    \"name\": \"user\",\n                    \"value\": \"Pknaepen@its.jnj.com\"\n                },\n                {\n                    \"name\": \"password\",\n                    \"value\": \"prasun@123\"\n                },\n                {\n                    \"name\": \"senderID\",\n                    \"value\": \"OPNHSE\"\n                },\n                {\n                    \"name\": \"msgtype\",\n                    \"value\": \"4\"\n                },\n                {\n                    \"name\": \"dcs\",\n                    \"value\": \"8\"\n                },\n                {\n                    \"name\": \"ishex\",\n                    \"value\": \"1\"\n                },\n                {\n                    \"name\": \"state\",\n                    \"value\": \"4\"\n                }\n            ]\n        },\n        {\n            \"name\": \"nexmo\",\n            \"maxRetries\": 3,\n            \"excludeLastFooter\": true,\n            \"splitHeader\": \"Msg $m of $t\",\n            \"splitFooter\": \"...\",\n            \"templateName\": \"nexmo\",\n            \"props\": [\n                {\n                    \"name\": \"from\",\n                    \"value\": \"510636669\"\n                },\n                {\n                    \"name\": \"api_key\",\n                    \"value\": \"YOUR_API_KEY\"\n                },\n                {\n                    \"name\": \"api_secret\",\n                    \"value\": \"YOUR_API_SECRET\"\n                }\n            ]\n        }\n    ]\n}"
 						},
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/configs",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/configs",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -755,9 +755,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{remoteAddress}}/openmrs/ws/sms/status/test-config",
+							"raw": "{{serverAddress}}/openmrs/ws/sms/status/test-config",
 							"host": [
-								"{{remoteAddress}}"
+								"{{serverAddress}}"
 							],
 							"path": [
 								"openmrs",
@@ -786,270 +786,6 @@
 					"listen": "test",
 					"script": {
 						"id": "575858b1-5fbe-48cd-bb7c-95787831a2cd",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "SMS localhost",
-			"item": [
-				{
-					"name": "get all configs",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/configs",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"configs"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get status",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/status/test-config",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"status",
-								"test-config"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all templates",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/templates",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"templates"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all records legacy",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/rest/v1/sms/loggingrecord/",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"rest",
-								"v1",
-								"sms",
-								"loggingrecord",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all records",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/log?page=1&rows=3&deliveryStatus=PENDING&config&phoneNumber&messageContent&timeFrom&providerStatus&smsDirection&motechId&providerId&errorMessage",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"log"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "rows",
-									"value": "3"
-								},
-								{
-									"key": "sortColumn",
-									"value": "timestamp",
-									"disabled": true
-								},
-								{
-									"key": "sortDirection",
-									"value": "DESC",
-									"disabled": true
-								},
-								{
-									"key": "timeTo",
-									"value": "2019-09-25 00:00:00",
-									"disabled": true
-								},
-								{
-									"key": "deliveryStatus",
-									"value": "PENDING"
-								},
-								{
-									"key": "config",
-									"value": null
-								},
-								{
-									"key": "phoneNumber",
-									"value": null
-								},
-								{
-									"key": "messageContent",
-									"value": null
-								},
-								{
-									"key": "timeFrom",
-									"value": null
-								},
-								{
-									"key": "providerStatus",
-									"value": null
-								},
-								{
-									"key": "smsDirection",
-									"value": null
-								},
-								{
-									"key": "motechId",
-									"value": null
-								},
-								{
-									"key": "providerId",
-									"value": null
-								},
-								{
-									"key": "errorMessage",
-									"value": null
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "send SMS",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"recipients\": [\"test_recipient\"],\n\t\"message\": \"test message\",\n\t\"config\": \"test-config\",\n\t\"deliveryTime\": null,\n\t\"providerId\": \"Twilio\",\n\t\"failureCount\": 0,\n\t\"customParams\": null\n}"
-						},
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/send",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"send"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create Config",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"defaultConfigName\": \"test-config\",\n  \"configs\": [\n    {\n      \"name\": \"test-config\",\n      \"maxRetries\": 3,\n      \"excludeLastFooter\": false,\n      \"splitHeader\": true,\n      \"splitFooter\": true,\n      \"templateName\": \"Twilio\",\n      \"props\": []\n    }\n  ]\n}\n"
-						},
-						"url": {
-							"raw": "{{localAddress}}/openmrs/ws/sms/configs",
-							"host": [
-								"{{localAddress}}"
-							],
-							"path": [
-								"openmrs",
-								"ws",
-								"sms",
-								"configs"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "294717a2-bc20-44e2-8574-d4950cfa44a7",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "74df6e5d-9411-41ff-8c6f-e1768b376040",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -1099,15 +835,9 @@
 	],
 	"variable": [
 		{
-			"id": "bb2634d7-147c-4325-a84f-476a58cccd5a",
-			"key": "localAddress",
+			"id": "10aaaa3f-a5f5-47a7-aa22-5fe5a6ae3214",
+			"key": "serverAddress",
 			"value": "http://localhost:8080",
-			"type": "string"
-		},
-		{
-			"id": "c28262a2-7a9a-4769-b8b7-1bd3fd76c33b",
-			"key": "remoteAddress",
-			"value": "http://cfl-dev-lb-149730096.us-east-1.elb.amazonaws.com",
 			"type": "string"
 		}
 	],
