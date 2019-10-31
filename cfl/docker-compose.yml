@@ -26,8 +26,11 @@ services:
       DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
       DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+      COPY_CFL_MODULES: 'false'
     volumes:
       - web-data:/usr/local/tomcat/.OpenMRS
+      - ~/.cfl-dev/modules:/usr/local/tomcat/.OpenMRS/modules/
+      - ~/.cfl-dev/owa:/usr/local/tomcat/.OpenMRS/owa/
 
 volumes:
   db-data:

@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# Builds a CFL modules, copies it to the module volume and restarts the CFL deployment using docker compose. 
+# Can be controlled with environment variables:
+# 
+# CFL_OPENMRS_REPO - points to the CFL OpenMRS repositories. Defaults to the current working dir.
+# CFL_OPENMRS_HOME - points to the home directory where all CFL git repositories are located. Defaults to the
+#                    parent directory of CFL_OPENMRS_REPO.
+# ETL_REPO_DIR - points to the ETL-Lite module repository. Defaults to $CFL_REPO_HOME/omrs-etl.
+# SMS_REPO_DIR - points to the SMS module repository. Default to $CFL_REPO_HOME/omrs-sms.
+# CALLFLOW_REPO_DIR - points to the CallFlow module repository. Default to $CFL_REPO_HOME/omrs-callflows.
+#
+# For optimal development experience these script should be placed on the PATH, and the variables above
+# configured in .bashrc.
+#
+# Usage:
+# build-cfl-module <module>
+#
+# Module can take the values of: sms, etl, callflow.
+#
+
+set -e
+
+if [ -z $CFL_OPENMRS_REPO ];then
+    CFL_OPENMRS_REPO=`pwd`
+fi
+
+echo "CFL OpenMRS Repository: $CFL_OPENMRS_REPO"
+
+# Directory at which your repositories are located
+if [ -z $CFL_REPO_HOME ]; then
+    CFL_REPO_HOME=`dirname $CFL_OPENMRS_REPO`
+fi
+
+echo "Resolved CFL repository home to $CFL_REPO_HOME"
+
+if [ -z $ETL_REPO_DIR ]; then
+    ETL_REPO_DIR="$CFL_REPO_HOME/omrs-etl"
+fi
+if [ -z $SMS_REPO_DIR ]; then
+    SMS_REPO_DIR="$CFL_REPO_HOME/omrs-sms"
+fi
+if [ -z $CALLFLOW_REPO_DIR ]; then
+    CALLFLOW_REPO_DIR="$CFL_REPO_HOME/omrs-callflows"
+fi
+
+echo "Resolved repository directories"
+echo "ETL repository: $ETL_REPO_DIR"
+echo "SMS repository: $SMS_REPO_DIR"
+echo "CallFlow repository: $CALLFLOW_REPO_DIR"
+
+shopt -s nocasematch
+case "$1" in
+    "sms" ) BUILD_DIR=$SMS_REPO_DIR;;
+    "etl" ) BUILD_DIR=$ETL_REPO_DIR;;
+    "callflow" ) BUILD_DIR=$CALLFLOW_REPO_DIR;;
+    *) echo "Usage: 'build-cfl-module <module>'. Module can have the following values: sms, etl, callflow." && exit 1
+esac
+
+echo "Building $BUILD_DIR"
+
+mvn clean install -f $BUILD_DIR/pom.xml
+
+echo "Copying OMOD file"
+
+sudo cp $BUILD_DIR/omod/target/*.omod ~/.cfl-dev/modules
+
+docker-compose -f $CFL_OPENMRS_REPO/cfl/docker-compose.yml down
+
+docker-compose -f $CFL_OPENMRS_REPO/cfl/docker-compose.yml up --build -d
+
