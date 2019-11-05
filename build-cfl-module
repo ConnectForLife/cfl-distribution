@@ -67,5 +67,5 @@ sudo cp $BUILD_DIR/omod/target/*.omod ~/.cfl-dev/modules
 
 docker-compose -f $CFL_OPENMRS_REPO/cfl/docker-compose.yml down
 
-docker-compose -f $CFL_OPENMRS_REPO/cfl/docker-compose.yml up --build -d
+docker-compose -f $CFL_OPENMRS_REPO/cfl/docker-compose.yml -f $CFL_OPENMRS_REPO/cfl/docker-compose.override.yml up --build -d
 
