@@ -33,6 +33,6 @@ pipelines:
             - docker tag cfl/openmrs:${BITBUCKET_BRANCH} ${AWS_REGISTRY_URL}/cfl/openmrs:${BITBUCKET_BRANCH}
             - docker push ${AWS_REGISTRY_URL}/cfl/openmrs:${BITBUCKET_BRANCH}
             # redeploy ECS - it uses the latest image from ECR
-            - aws ecs update-service --cluster cfl-ec2-cluster --service cfl-${BITBUCKET_BRANCH}-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
+            - aws ecs update-service --cluster cfl-ec2-cluster2 --service cfl-${BITBUCKET_BRANCH}-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
 
 
