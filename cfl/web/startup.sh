@@ -4,6 +4,7 @@ DB_CREATE_TABLES=${DB_CREATE_TABLES:-false}
 DB_AUTO_UPDATE=${DB_AUTO_UPDATE:-false}
 MODULE_WEB_ADMIN=${MODULE_WEB_ADMIN:-true}
 DEBUG=${DEBUG:-false}
+DEV_MODE_MODULES=${DEV_MODE_MODULES:-"messages"}
 
 OPENMRS_HOME=/usr/local/tomcat/.OpenMRS
 
@@ -24,6 +25,8 @@ if [ "$COPY_CFL_MODULES" != "false" ]; then
     echo 'Copying CFL modules'
     cp -r /opt/cfl-modules/* $OPENMRS_HOME/modules/
 fi
+
+mkdir -p ~/modules
 
 cat > /usr/local/tomcat/openmrs-server.properties << EOF
 install_method=auto
@@ -59,6 +62,16 @@ curl -L http://localhost:8080/openmrs/ > /dev/null
 echo "Data import triggered"
 sleep 15
 
+# add development mode properties
+grep -qxF 'uiFramework.developmentFolder=/usr/local/modules' /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo 'uiFramework.developmentFolder=/usr/local/modules' >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+grep -q 'uiFramework.developmentModules' /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "uiFramework.developmentModules=${DEV_MODE_MODULES}" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+sed -i "s/uiFramework.developmentModules=.*/uiFramework.developmentModules=${DEV_MODE_MODULES}/g" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+
+# disabling cache properties
+grep -qxF "net.sf.ehcache.disabled=true" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "net.sf.ehcache.disabled=true" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+grep -qxF "hibernate.cache.use_second_level_cache=false" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "hibernate.cache.use_second_level_cache=false" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+grep -qxF "hibernate.cache.use_query_cache=false" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "hibernate.cache.use_query_cache=false" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+grep -qxF "hibernate.cache.auto_evict_collection_cache=false" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "hibernate.cache.auto_evict_collection_cache=false" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
+
 # bring tomcat process to foreground again
 wait ${!}
-

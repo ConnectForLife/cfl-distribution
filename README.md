@@ -47,3 +47,30 @@ mvn openmrs-sdk:build-distro -Ddistro=clf-openmrs-distro.properties -Ddir=cfl
 
 ## The non-official modules
 In order to add non-official module you can put the OpenMRS module (.omod file) into `cfl/web/modules/` and restart the `cfl_web` container.
+
+## Development mode
+In order to use the UI framework development mode you should set the following environment variable (in `/cfl/.env`), where value should point to the local directory where you contains all the OpenMRS modules:
+```
+...
+DEV_MODE_DIR=/home/user/cfl
+...
+```
+
+next you have to specify (also in `/cfl/.env/`) module's id which you want to watch (comma separated list od module ids)
+```
+...
+DEV_MODE_MODULES=messages
+...
+```
+
+and then run the following script
+```
+cfl/runInDevMode.sh
+```
+
+### Note:
+* The development mode will work only if you have your code checked out into a directory named either <moduleId> or openmrs-module-<moduleId>
+* The development mode (and changes of DEV_MODE_MODULES prop) will work only after second run of the environment
+
+More info:
+https://wiki.openmrs.org/display/docs/Using+the+UI+Framework+in+Your+Module
