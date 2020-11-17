@@ -53,6 +53,11 @@ UPDATE openmrs.global_property SET property_value = 'Thank you for participating
 UPDATE openmrs.global_property SET property_value = '#set ($integerClazz = $openmrsContext.loadClass("java.lang.Integer"))#set ($stringClazz = $openmrsContext.loadClass("java.lang.String"))#set ($simpleDateFormat = $openmrsContext.loadClass("java.text.SimpleDateFormat").getDeclaredConstructor($stringClazz).newInstance("yyyy-MM-dd"))#set ($visitTypeIdInteger = $integerClazz.parseInt($visitTypeId))#set ($visitPurpose = $openmrsContext.getVisitService().getVisitType($visitTypeIdInteger).getName())#set($textToRead1 = "Hello $patient.getPersonName().toString(), You have a")#set($textToRead2 = "visit scheduled for $simpleDateFormat.format($simpleDateFormat.parse($dateStarted)) for the purpose of $visitPurpose.")$textToRead1 $textToRead2', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.notificationTemplate.visit-reminder';
 UPDATE openmrs.global_property SET property_value = 'voxeo', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.callConfig';
 UPDATE openmrs.global_property SET property_value = 'Europe/Brussels', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.defaultUserTimezone';
+UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.sendSmsOnPatientRegistration';
+UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.performCallOnPatientRegistration';
+UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaSms';
+UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaCall';
+UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.vaccinationInformationEnabled';
 
 
 
