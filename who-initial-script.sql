@@ -58,8 +58,10 @@ UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW()
 UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaSms';
 UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaCall';
 UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.vaccinationInformationEnabled';
+UPDATE openmrs.global_property SET property_value = 'en', date_changed = NOW(), changed_by = 2 WHERE property = 'default_locale';
 
-
+/* SCHEDULED TASKS CONFIG */
+UPDATE openmrs.scheduler_task_config SET start_on_startup = 0, started = 0, date_changed = NOW(), changed_by = 2 WHERE name = 'Missed Visits Status Changer';
 
 /* MESSAGE TEMPLATES */
 UPDATE openmrs.messages_template SET service_query ='SELECT EXECUTION_DATE,
@@ -523,3 +525,4 @@ $tags.add($locationTag)
 		#end
 	#end
 #end','',1000,10,'d88a11d2-d9ed-4d38-85ad-675b1d478789',1,1,NOW(), NOW());
+
