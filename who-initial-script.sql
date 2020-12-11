@@ -396,7 +396,7 @@ SELECT * from dosing_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled
 				#set($visit.startDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
 				#set($visit.stopDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
 				#set($sourceKey = "uuid_visitPurpose_dateDosing")
-		        #set($sourceValue = $row.uuid + "_" + $row.visit_purpose + "_" + $row.date_dosing)
+		        #set($sourceValue = $row.uuid + "~" + $row.visit_purpose + "~" + $row.date_dosing)
 		        $irisAdminService.setGlobalProperty("iris.lastVisitRefreshDate", $row.REFRESH_DATE.getTime().toString())
 				$irisVisitService.saveVisit($visit)
 				#set($isNewVisit = false)
@@ -427,7 +427,7 @@ SELECT * from dosing_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled
 		   	#end
 
 			#set($sourceKey = "uuid_visitPurpose_dateDosing")
-			#set($sourceValue = $row.uuid + "_" + $row.visit_purpose + "_" + $row.date_dosing)
+			#set($sourceValue = $row.uuid + "~" + $row.visit_purpose + "~" + $row.date_dosing)
 			$irisAdminService.setGlobalProperty("iris.lastVisitRefreshDate", $row.REFRESH_DATE.getTime().toString())
 			$irisVisitService.saveVisit($visit)
 		#end
@@ -517,12 +517,124 @@ $tags.add($locationTag)
 		#end
 
 		#set($sourceKey = "siteCode_city")
-		#set($sourceValue = $row.site_code + "_" + $row.city)
+		#set($sourceValue = $row.site_code + "~" + $row.city)
 		#if ($locationService.getLocation($row.SITE_CODE))
 			$irisLocationService.updateLocation($location)
 		#else 
 			$irisLocationService.saveLocation($location)
 		#end
 	#end
-#end','',1000,10,'d88a11d2-d9ed-4d38-85ad-675b1d478789',1,1,NOW(), NOW());
+#end','',1000,10,'d88a11d2-d9ed-4d38-85ad-675b1d478789',1,1,NOW(), NOW()),
+('Failed Visits','','SELECT * from dosing_solidarity where refresh_date > NOW() - INTERVAL 1 DAY;
+','#foreach($row in $rows)
+	$outs.add($row);
+#end','##________ QUERY _________##
+SELECT * from dosing_solidarity where refresh_date > NOW() - INTERVAL 1 DAY;
 
+##________ TRANSFORM _________##
+##transform
+#foreach($row in $rows)
+		$outs.add($row);
+#end
+
+##________ LOAD _________##
+#set($calendarClass = $util.loadClass("java.util.Calendar"))
+#set($cal = $calendarClass.getInstance())
+## 5 is Calendar.DATE
+$cal.add(5, -1)
+#set($notSavedVisits = $etlErrorService.getVisitErrorLogs("MariaDB", "Visit schedule", $cal.getTime(), $util.today()))
+
+#if ($rows.size() > 0 && $notSavedVisits.size() > 0)
+
+   	#set($visitClass = "org.openmrs.Visit")
+	#set($otherLocationUuid = "8d6c993e-c2cc-11de-8d13-0010c6dffd0f")
+	#set($today = $util.today())
+	#set($visitAttributeClass = "org.openmrs.VisitAttribute")
+	#set($otherVisitTypeUuid = "5247a295-4528-4f7e-aec7-5febd4566dc1")
+
+	#set($visitStatusAttributeTypeName = "Visit Status")
+	#set($refreshDateAttributeTypeName = "Refresh Date")
+	#set($statusOfOccuredVisit = $adminService.getGlobalProperty("visits.statusOfOccurredVisit"))
+	#set($otherLocation = $locationService.getLocationByUuid($otherLocationUuid))
+	#set($otherVisitTypeName = "Other")
+
+	#foreach($visitAttributeType in $visitService.getAllVisitAttributeTypes())
+		#if($visitAttributeType.getName() == $visitStatusAttributeTypeName)
+			#set($visitStatusAttributeType = $visitAttributeType)
+		#elseif($visitAttributeType.getName() == $refreshDateAttributeTypeName)
+			#set($visitRefreshDateAttributeType = $visitAttributeType)
+		#end
+	#end
+	
+	#foreach($visitType in $visitService.getAllVisitTypes())
+		#if($visitType.getName().toLowerCase() == $otherVisitTypeName.toLowerCase())
+			#set($otherVisitType = $visitType)
+		#end
+	#end
+	
+	##for every previously failed in last 24h visit save
+    #foreach($notSavedVisit in $notSavedVisits)
+		#foreach($row in $rows)
+			#if($row.uuid == $notSavedVisit.uuid && $row.visit_purpose == $notSavedVisit.visitPurpose && $row.date_dosing == $notSavedVisit.dosingDate)
+			##save it once again, below same save logic as in visit etl, skip updateing last save GP though
+				#set($previousVisits = $visitService.getVisitsByPatient($patientService.getPatientByUuid($row.uuid)))
+				#set($isNewVisit = true)
+				#foreach($visit in $previousVisits)
+					#set($isVisitScheduled = false)
+					#foreach($attribute in $visit.getActiveAttributes())
+						#if($attribute.getAttributeType().getName() == $visitStatusAttributeTypeName && $attribute.getValue() == "SCHEDULED")
+							#set($isVisitScheduled = true)
+						#end
+					#end
+					#if($visit.visitType.name.toString().toLowerCase() == $row.VISIT_PURPOSE.toString().toLowerCase() && $isVisitScheduled == true)
+						#set($occurredVisitStatusVisitAttribute = $util.newObject($visitAttributeClass))
+						#set($occurredVisitStatusVisitAttribute.attributeType = $visitStatusAttributeType)
+						$occurredVisitStatusVisitAttribute.setValueReferenceInternal($statusOfOccuredVisit)
+						$visit.setAttribute($occurredVisitStatusVisitAttribute)
+
+						#set($refreshDateVisitAttribute = $util.newObject($visitAttributeClass))
+						#set($refreshDateVisitAttribute.attributeType = $visitRefreshDateAttributeType)
+						$refreshDateVisitAttribute.setValueReferenceInternal($row.REFRESH_DATE.getTime().toString())
+						$visit.setAttribute($refreshDateVisitAttribute)
+
+						#set($visit.startDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
+						#set($visit.stopDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
+						#set($sourceKey = "uuid_visitPurpose_dateDosing")
+						#set($sourceValue = $row.uuid + "~" + $row.visit_purpose + "~" + $row.date_dosing)
+						$irisVisitService.saveVisit($visit)
+						#set($isNewVisit = false)
+					#end
+				#end
+				#if($isNewVisit == true)
+					#set($visit = $util.newObject($visitClass))
+					#set($visit.patient = $patientService.getPatientByUuid($row.uuid))
+					#set($visit.startDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
+					#set($visit.stopDatetime = $util.stringToDate($row.DATE_DOSING, "dd-MMM-yy"))
+					#set($visit.location = $otherLocation)
+
+					#set($occurredVisitStatusVisitAttribute = $util.newObject($visitAttributeClass))
+					#set($occurredVisitStatusVisitAttribute.attributeType = $visitStatusAttributeType)
+					$occurredVisitStatusVisitAttribute.setValueReferenceInternal($statusOfOccuredVisit)
+					$visit.setAttribute($occurredVisitStatusVisitAttribute)
+
+					#set($refreshDateVisitAttribute = $util.newObject($visitAttributeClass))
+					#set($refreshDateVisitAttribute.attributeType = $visitRefreshDateAttributeType)
+					$refreshDateVisitAttribute.setValueReferenceInternal($row.REFRESH_DATE.getTime().toString())
+					$visit.setAttribute($refreshDateVisitAttribute)
+
+					#set($visit.visitType = $otherVisitType)
+					#foreach($visitType in $visitService.getAllVisitTypes())
+						#if($visitType.getName().toLowerCase() == $row.VISIT_PURPOSE.toString().toLowerCase())
+							#set($visit.visitType = $visitType)
+						#end
+					#end
+
+					#set($sourceKey = "uuid_visitPurpose_dateDosing")
+					#set($sourceValue = $row.uuid + "~" + $row.visit_purpose + "~" + $row.date_dosing)
+					$irisVisitService.saveVisit($visit)
+				#end
+			#end
+		#end
+    #end
+#end
+','',1000,10,'98d43191-7395-449b-98d1-0eb5dc809160',1,1,NOW(), NOW());;
