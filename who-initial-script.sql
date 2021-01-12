@@ -35,6 +35,8 @@ UPDATE openmrs.patient_identifier_type SET
 uniqueness_behavior = 'NON_UNIQUE', date_changed = NOW(), changed_by = 2, validator = NULL
 WHERE uuid = '05a29f94-c0ed-11e2-94be-8c13b969e334';
 
+UPDATE openmrs.idgen_seq_id_gen SET min_length = 0 WHERE id = (SELECT id FROM openmrs.idgen_identifier_source WHERE name = 'Generator for OpenMRS ID');
+
 /* MESSAGES SERVICE TYPES - disable other than visit reminder */
 UPDATE openmrs.messages_template SET voided = 1, voided_by = 2, date_voided = NOW() WHERE uuid = '9556482a-20b2-11ea-ac12-0242c0a82002';
 UPDATE openmrs.messages_template SET voided = 1, voided_by = 2, date_voided = NOW() WHERE uuid = '96d93c15-3884-11ea-b1e9-0242ac160002';
