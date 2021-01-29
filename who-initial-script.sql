@@ -51,16 +51,26 @@ UPDATE openmrs.global_property SET property_value = '1,2', date_changed = NOW(),
 UPDATE openmrs.global_property SET property_value = '{"acec590b-825e-45d2-876a-0028f174903d":"07:20","global":"14:30"}', date_changed = NOW(), changed_by = 2 WHERE property = 'message.bestContactTime.default';
 UPDATE openmrs.global_property SET property_value = 'false', date_changed = NOW(), changed_by = 2 WHERE property = 'message.consent.validation';
 UPDATE openmrs.global_property SET property_value = 'MainFlow', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.patientRegistrationCallFlowName';
-UPDATE openmrs.global_property SET property_value = 'Thank you for participating in the Solidarity Vaccine Trial.  We will remind you about upcoming appointments.  Please call 12345 if you have any questions.', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.smsMessageAfterRegistration';
-UPDATE openmrs.global_property SET property_value = '#set ($integerClazz = $openmrsContext.loadClass("java.lang.Integer"))#set ($stringClazz = $openmrsContext.loadClass("java.lang.String"))#set ($simpleDateFormat = $openmrsContext.loadClass("java.text.SimpleDateFormat").getDeclaredConstructor($stringClazz).newInstance("yyyy-MM-dd"))#set ($visitTypeIdInteger = $integerClazz.parseInt($visitTypeId))#set ($visitPurpose = $openmrsContext.getVisitService().getVisitType($visitTypeIdInteger).getName())#set($textToRead1 = "Hello $patient.getPersonName().toString(), You have a")#set($textToRead2 = "visit scheduled for $simpleDateFormat.format($simpleDateFormat.parse($dateStarted)) for the purpose of $visitPurpose.")$textToRead1 $textToRead2', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.notificationTemplate.visit-reminder';
+UPDATE openmrs.global_property SET property_value = '{ message: "Thank you for participating in the Solidarity Vaccine Trial.  We will remind you about upcoming appointments.  Please call 12345 if you have any questions." }', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.smsMessageAfterRegistration';
+UPDATE openmrs.global_property SET property_value = '#set ($integerClazz = $openmrsContext.loadClass("java.lang.Integer"))#set ($stringClazz = $openmrsContext.loadClass("java.lang.String"))#set ($simpleDateFormat = $openmrsContext.loadClass("java.text.SimpleDateFormat").getDeclaredConstructor($stringClazz).newInstance("yyyy-MM-dd"))#set ($visitTypeIdInteger = $integerClazz.parseInt($visitTypeId))#set ($visitPurpose = $openmrsContext.getVisitService().getVisitType($visitTypeIdInteger).getName())#set($textToRead1 = "Hello $patient.getPersonName().toString(), You have a")#set($textToRead2 = "visit scheduled for $simpleDateFormat.format($simpleDateFormat.parse($dateStarted)) for the purpose of $visitPurpose."){ message:"$textToRead1 $textToRead2" }', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.notificationTemplate.visit-reminder';
 UPDATE openmrs.global_property SET property_value = 'voxeo', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.callConfig';
 UPDATE openmrs.global_property SET property_value = 'Europe/Brussels', date_changed = NOW(), changed_by = 2 WHERE property = 'messages.defaultUserTimezone';
-UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.sendSmsOnPatientRegistration';
-UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.performCallOnPatientRegistration';
-UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaSms';
-UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.shouldSendReminderViaCall';
 UPDATE openmrs.global_property SET property_value = 'true', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.vaccinationInformationEnabled';
 UPDATE openmrs.global_property SET property_value = 'en', date_changed = NOW(), changed_by = 2 WHERE property = 'default_locale';
+UPDATE openmrs.global_property SET property_value = '[
+   {
+      "default":{
+         "SMS":"turnIO",
+         "CALL":"nexmo",
+         "Whatsapp":"plivo",
+         "performCallOnPatientRegistration":false,
+         "sendSmsOnPatientRegistration":true,
+         "shouldSendReminderViaCall":false,
+         "shouldSendReminderViaSms":true
+      }
+   }
+]', date_changed = NOW(), changed_by = 2 WHERE property = 'cfl.countrySettingsMap';
+
 
 /* SCHEDULED TASKS CONFIG */
 UPDATE openmrs.scheduler_task_config SET start_on_startup = 0, started = 0, date_changed = NOW(), changed_by = 2 WHERE name = 'Missed Visits Status Changer';
@@ -225,7 +235,7 @@ $outs.add($out);','#if ($outs.size() > 0)
     #end
 #end
 ','',1000,10,'f7e65a28-8276-4432-bb63-e301bea83256',1,1,NOW(), NOW())
-,('Patient registraiton','','#set($last_pulled = $util.loadClass("org.openmrs.api.context.ServiceContext").getInstance().getApplicationContext().getBean("adminService").getGlobalProperty("iris.lastPatientRefreshDate", "1"))	
+,('Patient Registration','','#set($last_pulled = $util.loadClass("org.openmrs.api.context.ServiceContext").getInstance().getApplicationContext().getBean("adminService").getGlobalProperty("iris.lastPatientRefreshDate", "1"))	
 SELECT * from demo_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled + 1)/1000) order by REFRESH_DATE limit 1000;','#foreach( $row in $rows )
 	#set($out = {})           
 	#if ($row.PHONE && $row.PHONE.contains("+")) 
@@ -343,7 +353,7 @@ SELECT * from demo_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled +
        #end
  #end','',1000,10,'df8c411d-2f22-4227-ac23-65a43cd232fe',1,1,NOW(), NOW())
 ,('Visit schedule','','#set($last_pulled = $util.loadClass("org.openmrs.api.context.ServiceContext").getInstance().getApplicationContext().getBean("adminService").getGlobalProperty("iris.lastVisitRefreshDate", "1"))
-SELECT * from dosing_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled + 1)/1000) order by REFRESH_DATE limit 100;
+SELECT * from dosing_solidarity where refresh_date > FROM_UNIXTIME(($last_pulled + 1)/1000) order by REFRESH_DATE limit 1000;
 ','##transform
 #foreach($row in $rows)
 		$outs.add($row);
@@ -530,16 +540,7 @@ $tags.add($locationTag)
 ('Failed Visits','','SELECT * from dosing_solidarity where refresh_date > NOW() - INTERVAL 1 DAY;
 ','#foreach($row in $rows)
 	$outs.add($row);
-#end','##________ QUERY _________##
-SELECT * from dosing_solidarity where refresh_date > NOW() - INTERVAL 1 DAY;
-
-##________ TRANSFORM _________##
-##transform
-#foreach($row in $rows)
-		$outs.add($row);
-#end
-
-##________ LOAD _________##
+#end','
 #set($calendarClass = $util.loadClass("java.util.Calendar"))
 #set($cal = $calendarClass.getInstance())
 ## 5 is Calendar.DATE
