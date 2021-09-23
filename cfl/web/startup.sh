@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -ux
 
 DB_CREATE_TABLES=${DB_CREATE_TABLES:-false}
 DB_AUTO_UPDATE=${DB_AUTO_UPDATE:-false}
@@ -52,8 +52,12 @@ if [ $DEBUG ]; then
     export JPDA_TRANSPORT=dt_socket
 fi
 
+# popagate SIGTERM to Tomcat for graceful shutdown
+trap 'kill $CATALINA_PID' TERM INT
+
 # start tomcat in background
 /usr/local/tomcat/bin/catalina.sh jpda run &
+CATALINA_PID=$!
 
 # trigger first filter to start data importation
 sleep 15
@@ -74,4 +78,10 @@ grep -qxF "hibernate.cache.use_query_cache=false" /usr/local/tomcat/.OpenMRS/ope
 grep -qxF "hibernate.cache.auto_evict_collection_cache=false" /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties || echo "hibernate.cache.auto_evict_collection_cache=false" >> /usr/local/tomcat/.OpenMRS/openmrs-runtime.properties
 
 # bring tomcat process to foreground again
-wait ${!}
+wait $CATALINA_PID
+
+# 2nd wait for graceful shutown, don't pass signals anymore
+trap - TERM INT
+wait $CATALINA_PID
+# Return exiit code from graceful shutdown
+exit $?
