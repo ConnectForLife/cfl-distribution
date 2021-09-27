@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Resets modules in ~/.cfl-dev/modules with the CFL repository versions
+# Uses current working directory as the CFL OpenMRS repo, can be changed
+# with the CFL_OPENMRS_REPO environment variable.
+
+set -e
+
+if [ -z $CFL_OPENMRS_REPO ];then
+    CFL_OPENMRS_REPO=`pwd`
+fi
+
+echo "CFL OpenMRS Repository: $CFL_OPENMRS_REPO"
+
+MODULE_PATH="$CFL_OPENMRS_REPO/cfl/web/cfl-modules"
+
+echo "Copying CFL modules from $MODULE_PATH to ~/.cfl-dev/modules"
+sudo cp ${MODULE_PATH}/* ~/.cfl-dev/modules
+

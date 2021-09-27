@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  db:
+    image: mysql:5.7
+    command: "mysqld --character-set-server=utf8 --collation-server=utf8_general_ci"
+    environment:
+      MYSQL_DATABASE: openmrs
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./dbdump:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+
+  web:
+    build: web
+    image: openmrscfldemodistro:1.1.0
+    depends_on:
+      - db
+    environment:
+      DB_DATABASE: openmrs
+      DB_HOST: db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_CREATE_TABLES: 'false'  # change to 'true' if using an empty database
+      DB_AUTO_UPDATE: 'false'    # change to 'true' if using an empty database
+      MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
+      COPY_CFL_MODULES: 'false'
+    volumes:
+      - web-data:/usr/local/tomcat/.OpenMRS
+      - ~/.cfl-dev/modules:/usr/local/tomcat/.OpenMRS/modules/
+      - ~/.cfl-dev/owa:/usr/local/tomcat/.OpenMRS/owa/
+
+volumes:
+  db-data:
+  web-data:

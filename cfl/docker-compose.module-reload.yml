@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  web:
+    environment:
+      COPY_CFL_MODULES: 'true'
