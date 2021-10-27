@@ -5,7 +5,7 @@ TS_PTRN="%Y-%m-%dT%H:%M:%S.%3N"
 echo $(date +$TS_PTRN)": CFL Demo restart started"
 
 # Git URL to demo package project
-DEMO_GIT=""
+DEMO_GIT="https://github.com/ConnectForLife/cfl-distribution.git"
 # Location where running Demo saves reports (docker host location)
 REPORT_VOLUME_DIR="/root/.cfl/reports"
 # Name of branch to checkout from DEMO_GIT
