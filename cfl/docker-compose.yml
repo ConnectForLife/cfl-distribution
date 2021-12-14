@@ -15,7 +15,7 @@ services:
 
   web:
     build: web
-    image: openmrscfldemodistro:1.1.0
+    image: openmrscfldemodistro:2.0.0
     depends_on:
       - db
     environment:
