@@ -30,6 +30,6 @@ services:
       MODULE_WEB_ADMIN: 'true'   # allow web admin on OpenMRS
       COPY_CFL_MODULES: 'false'
     ports:
-      - "${TOMCAT_PORT}:8080"
+      - "${TOMCAT_PORT}:80"
     volumes:
       - ~/.cfl/reports:/usr/local/tomcat/.OpenMRS/reports
